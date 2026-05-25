@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartCarWashSystem.Domain\SmartCarWash.Domain.csproj" />
+    <ProjectReference Include="..\SmartCarWash.Domain\SmartCarWash.Domain.csproj" />
   </ItemGroup>
 
 </Project>

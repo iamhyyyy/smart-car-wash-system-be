@@ -1,15 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.37216.2 d17.14
+VisualStudioVersion = 17.14.37216.2
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCarWash.Domain", "SmartCarWashSystem.Domain\SmartCarWash.Domain.csproj", "{B1498CFA-48D0-4DEC-B5AB-D7FA8C3E220D}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCarWash.Application", "SmartCarWash.Application\SmartCarWash.Application.csproj", "{7C173E56-964B-4E61-AE8A-23733C5BACA6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCarWash.Infrastructure", "SmartCarWash.Infrastructure\SmartCarWash.Infrastructure.csproj", "{770C27E8-AAF4-47CA-828F-68CE47BBA374}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCarWash.Api", "SmartCarWash.Api\SmartCarWash.Api.csproj", "{8671000C-D76D-471D-AA3C-CC10301C7D64}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCarWash.Domain", "SmartCarWash.Domain\SmartCarWash.Domain.csproj", "{BD5B1D72-A78B-6672-AB70-F419C40D1279}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B1498CFA-48D0-4DEC-B5AB-D7FA8C3E220D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1498CFA-48D0-4DEC-B5AB-D7FA8C3E220D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1498CFA-48D0-4DEC-B5AB-D7FA8C3E220D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1498CFA-48D0-4DEC-B5AB-D7FA8C3E220D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7C173E56-964B-4E61-AE8A-23733C5BACA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7C173E56-964B-4E61-AE8A-23733C5BACA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C173E56-964B-4E61-AE8A-23733C5BACA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +29,10 @@ Global
 		{8671000C-D76D-471D-AA3C-CC10301C7D64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8671000C-D76D-471D-AA3C-CC10301C7D64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8671000C-D76D-471D-AA3C-CC10301C7D64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD5B1D72-A78B-6672-AB70-F419C40D1279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD5B1D72-A78B-6672-AB70-F419C40D1279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD5B1D72-A78B-6672-AB70-F419C40D1279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD5B1D72-A78B-6672-AB70-F419C40D1279}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
