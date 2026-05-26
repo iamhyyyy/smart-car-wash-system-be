@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartCarWash.Application.DTOs;
 using SmartCarWash.Application.Interfaces;
+using SmartCarWash.Infrastructure.Services;
 
 namespace SmartCarWash.WebApi.Controllers
 {
@@ -9,10 +10,12 @@ namespace SmartCarWash.WebApi.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
+        private readonly IEmailService _emailService;
 
-        public VehiclesController(IVehicleService vehicleService)
+        public VehiclesController(IVehicleService vehicleService, IEmailService emailService)
         {
             _vehicleService = vehicleService;
+            _emailService = emailService;
         }
 
         [HttpGet("vehicles")]
@@ -36,6 +39,16 @@ namespace SmartCarWash.WebApi.Controllers
             return Ok(result);
         }
 
-        
+        [HttpGet("test")]
+        public async Task<IActionResult> SendTest()
+        {
+            await _emailService.SendEmailAsync(
+                "huyndse184016@fpt.edu.vn",
+                "Test Mail",
+                "Hello from PetHub 🐶"
+            );
+
+            return Ok("Email sent");
+        }
     }
 }

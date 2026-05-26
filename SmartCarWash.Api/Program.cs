@@ -8,6 +8,8 @@ using SmartCarWash.Domain.Entities;
 using SmartCarWash.Domain.Interfaces;
 using SmartCarWash.Infrastructure.Data;
 using SmartCarWash.Infrastructure.Repositories;
+using SmartCarWash.Infrastructure.Services;
+using SmartCarWash.Infrastructure.Settings;
 using System;
 
 namespace SmartCarWash.Api
@@ -18,6 +20,14 @@ namespace SmartCarWash.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // --- ĐOẠN CODE ÉP ƯU TIÊN APPSETTINGS ---
+            builder.Configuration.Sources.Clear(); // Xóa hết cấu hình mặc định (bao gồm cả Environment của máy)
+            builder.Configuration
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                .AddEnvironmentVariables(); // Đưa Environment xuống cuối cùng để nó không đè được appsettings nữa
+                                            // ----------------------------------------
+
             // Đăng ký Unit of Work
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
@@ -26,6 +36,8 @@ namespace SmartCarWash.Api
 
             // Đăng ký Service
             builder.Services.AddScoped<IVehicleService, VehicleService>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
 
             // Add services to the container.
             builder.Services.AddControllers();
@@ -93,6 +105,12 @@ namespace SmartCarWash.Api
             app.UseAuthentication();
             app.UseAuthorization();
             app.MapControllers();
+
+            app.MapGet("/", context =>
+            {
+                context.Response.Redirect("/swagger");
+                return Task.CompletedTask;
+            });
 
             //environment variable for port, default to 8080 if not set
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
