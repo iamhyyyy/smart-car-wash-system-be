@@ -19,24 +19,47 @@ namespace SmartCarWash.WebApi.Controllers
         }
 
         [HttpGet("vehicles")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<VehicleDto>>> GetAll()
         {
-            var result = await _serviceManager.VehicleService.GetAllVehiclesAsync();
+            var pets = await _serviceManager.VehicleService.GetAllAsync();
+            return Ok(pets);
+        }
 
-            return Ok(result);
+        [HttpGet("vehicle/{id}")]
+        public async Task<ActionResult<VehicleDto>> GetById(Guid id)
+        {
+            var vehicle = await _serviceManager.VehicleService.GetByIdAsync(id);
+            if (vehicle == null) return NotFound();
+            return Ok(vehicle);
+        }
+
+        [HttpGet("vehicles/customer/{customerId}")]
+        public async Task<ActionResult<List<VehicleDto>>> GetByCustomerId(Guid customerId)
+        {
+            var vehicles = await _serviceManager.VehicleService.GetByCustomerIdAsync(customerId);
+            return Ok(vehicles);
+        }
+
+        [HttpGet("vehicles/count/customer/{customerId}")]
+        public async Task<ActionResult<int>> CountByCustomerId(Guid customerId)
+        {
+            var count = await _serviceManager.VehicleService.CountByCustomerIdAsync(customerId);
+            return Ok(count);
         }
 
         [HttpPost("vehicle")]
-        public async Task<IActionResult> Create([FromBody] CreateVehicleDto dto)
+        public async Task<ActionResult<CreateVehicleDto>> Create(CreateVehicleDto dto)
         {
-            if (dto == null)
-            {
-                return BadRequest("Dữ liệu xe gửi lên không hợp lệ rồi ní ơi!");
-            }
+            var vehicle = await _serviceManager.VehicleService.AddVehicleAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = vehicle.Id }, vehicle);
+        }
 
-            var result = await _serviceManager.VehicleService.AddVehicleAsync(dto);
-
-            return Ok(result);
+        [HttpPatch("vehicle/{id}")]
+        public async Task<ActionResult> Update(Guid id, UpdateVehicleDto dto)
+        {
+            var pet = await _serviceManager.VehicleService.Update(id, dto);
+            if (!pet) return NotFound();
+            return NoContent();
         }
 
         [HttpGet("test")]

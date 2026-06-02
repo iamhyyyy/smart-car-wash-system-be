@@ -7,9 +7,16 @@ namespace SmartCarWash.Infrastructure.Repositories
 {
     public class VehicleRepository : GenericRepository<Vehicle>, IVehicleRepository
     {
+        private readonly AppDbContext _context;
         public VehicleRepository(AppDbContext context) : base(context)
         {
+            _context = context;
         }
-        // Thực thi hàm riêng ở đây nếu có
+
+        public async Task<List<Vehicle>> GetByCustomerIdAsync(Guid customerId)
+        {
+            return await _context.Vehicles.Where(p => p.CustomerId == customerId).ToListAsync();
+
+        }
     }
 }

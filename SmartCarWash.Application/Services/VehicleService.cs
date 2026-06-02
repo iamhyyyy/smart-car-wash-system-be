@@ -17,21 +17,53 @@ namespace SmartCarWash.Application.Services
             _mapper = mapper;
         }
 
+        public async Task<IEnumerable<VehicleDto>> GetAllAsync()
+        {
+            var vehicles = await _unitOfWork.VehicleRepository.GetAllAsync();
+
+            return _mapper.Map<IEnumerable<VehicleDto>>(vehicles);
+        }
+        public async Task<VehicleDto?> GetByIdAsync(Guid id)
+        {
+            var vehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(id);
+
+            return vehicle == null ? null : _mapper.Map<VehicleDto>(vehicle);
+        }
+
+        public async Task<List<VehicleDto>> GetByCustomerIdAsync(Guid customerId)
+        {
+            var vehicle = await _unitOfWork.VehicleRepository.GetByCustomerIdAsync(customerId);
+            return _mapper.Map<List<VehicleDto>>(vehicle);
+        }
+
+        public async Task<int> CountByCustomerIdAsync(Guid customerId)
+        {
+            var vehicles = await _unitOfWork.VehicleRepository.GetByCustomerIdAsync(customerId);
+            return vehicles.Count;
+        }
+
         public async Task<VehicleDto> AddVehicleAsync(CreateVehicleDto dto)
         {
             var vehicle = _mapper.Map<Vehicle>(dto);
-
+            vehicle.Id = Guid.NewGuid();
             await _unitOfWork.VehicleRepository.AddAsync(vehicle);
             await _unitOfWork.CompleteAsync();
 
             return _mapper.Map<VehicleDto>(vehicle);
         }
 
-        public async Task<IEnumerable<VehicleDto>> GetAllVehiclesAsync()
+        public async Task<bool> Update(Guid id, UpdateVehicleDto dto)
         {
-            var vehicles = await _unitOfWork.VehicleRepository.GetAllAsync();
+            var vehicle = await _unitOfWork.VehicleRepository.GetByIdAsync(id);
+            if (vehicle == null) return false;
 
-            return _mapper.Map<IEnumerable<VehicleDto>>(vehicles);
+            _mapper.Map(dto, vehicle);
+
+            vehicle.UpdatedAt = DateTime.UtcNow.AddHours(7);
+
+            _unitOfWork.VehicleRepository.Update(vehicle);
+            await _unitOfWork.CompleteAsync();
+            return true;
         }
     }
 }

@@ -12,7 +12,7 @@ using SmartCarWash.Infrastructure.Data;
 namespace SmartCarWash.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260602052416_updateTable")]
+    [Migration("20260602084522_updateTable")]
     partial class updateTable
     {
         /// <inheritdoc />

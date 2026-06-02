@@ -14,7 +14,7 @@ public class CustomerProfile : BaseEntity
     [Column(TypeName = "decimal(12,2)")]
     public decimal TotalSpending { get; set; } = 0;
     public DateTime? TierUpgradedAt { get; set; }
-    public DateTime LastTierReviewDate { get; set; } = DateTime.UtcNow;
+    public DateTime LastTierReviewDate { get; set; } = DateTime.UtcNow.AddHours(7);
 
     [ForeignKey(nameof(Id))]
     public User User { get; set; } = null!;
