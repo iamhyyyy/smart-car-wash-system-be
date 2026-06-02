@@ -1,4 +1,5 @@
-﻿using SmartCarWash.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartCarWash.Domain.Entities;
 using SmartCarWash.Domain.Interfaces;
 using SmartCarWash.Infrastructure.Data;
 

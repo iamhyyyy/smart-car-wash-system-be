@@ -1,17 +1,32 @@
 ﻿using SmartCarWash.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SmartCarWash.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SmartCarWash.Domain.Entities
+namespace SmartCarWash.Domain.Entities;
+
+[Table("Vehicle")]
+public class Vehicle : BaseEntity
 {
-    public class Vehicle : BaseEntity
-    {
-        public string LicensePlate { get; set; } = string.Empty; // Biển số xe (Quan trọng nhất)
-        public string VehicleType { get; set; } = string.Empty;  // Loại xe: Ô tô 4 chỗ, 7 chỗ, Xe máy...
-        public string OwnerName { get; set; } = string.Empty;   // Tên chủ xe
-    }
+    public Guid CustomerId { get; set; }
 
+    [Required, MaxLength(20)]
+    public string LicensePlate { get; set; } = string.Empty;
+
+    public VehicleType VehicleType { get; set; }
+
+    [MaxLength(50)]
+    public string? Brand { get; set; }
+
+    [MaxLength(50)]
+    public string? Model { get; set; }
+
+    [MaxLength(30)]
+    public string? Color { get; set; }
+
+    public bool IsActive { get; set; } = true;
+
+    [ForeignKey(nameof(CustomerId))]
+    public CustomerProfile Customer { get; set; } = null!;
+    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 }
