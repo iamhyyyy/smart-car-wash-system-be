@@ -9,19 +9,19 @@ namespace SmartCarWash.WebApi.Controllers
     [Route("api")]
     public class VehiclesController : ControllerBase
     {
-        private readonly IVehicleService _vehicleService;
+        private readonly IServiceManager _serviceManager;
         private readonly IEmailService _emailService;
 
-        public VehiclesController(IVehicleService vehicleService, IEmailService emailService)
+        public VehiclesController(IServiceManager serviceManager, IEmailService emailService)
         {
-            _vehicleService = vehicleService;
+            _serviceManager = serviceManager;
             _emailService = emailService;
         }
 
         [HttpGet("vehicles")]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _vehicleService.GetAllVehiclesAsync();
+            var result = await _serviceManager.VehicleService.GetAllVehiclesAsync();
 
             return Ok(result);
         }
@@ -34,7 +34,7 @@ namespace SmartCarWash.WebApi.Controllers
                 return BadRequest("Dữ liệu xe gửi lên không hợp lệ rồi ní ơi!");
             }
 
-            var result = await _vehicleService.AddVehicleAsync(dto);
+            var result = await _serviceManager.VehicleService.AddVehicleAsync(dto);
 
             return Ok(result);
         }
