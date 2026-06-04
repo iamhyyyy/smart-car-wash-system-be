@@ -8,7 +8,8 @@ namespace SmartCarWash.Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
         private Hashtable? _repositories;
-        private IVehicleRepository _vehicleRepository;
+        private IVehicleRepository _vehicleRepository = null!;
+        private IFeedbackRepository _feedbackRepository = null!;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -34,6 +35,7 @@ namespace SmartCarWash.Infrastructure.Repositories
         }
 
         public IVehicleRepository VehicleRepository => _vehicleRepository ??= new VehicleRepository(_context);
+        public IFeedbackRepository FeedbackRepository => _feedbackRepository ??= new FeedbackRepository(_context);
 
         public async Task<int> CompleteAsync()
         {

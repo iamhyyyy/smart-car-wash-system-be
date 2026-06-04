@@ -20,5 +20,7 @@ namespace SmartCarWash.Application.Services
         }
 
         public IVehicleService VehicleService => _serviceProvider.GetRequiredService<IVehicleService>();
+
+        public IFeedbackService FeedbackService => _serviceProvider.GetRequiredService<IFeedbackService>();
     }
 }

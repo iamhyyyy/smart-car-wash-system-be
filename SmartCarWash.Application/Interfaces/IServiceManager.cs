@@ -8,7 +8,7 @@ namespace SmartCarWash.Application.Interfaces
 {
     public interface IServiceManager
     {
-        //IEmailService EmailService { get; }
         IVehicleService VehicleService { get; }
+        IFeedbackService FeedbackService { get; }
     }
 }

@@ -33,9 +33,12 @@ namespace SmartCarWash.Api
 
             // Đăng ký Repository
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+            builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 
             // Đăng ký Service
             builder.Services.AddScoped<IVehicleService, VehicleService>();
+            builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddScoped<IEmailService, EmailService>();
             builder.Services.Configure<SendGridSettings>(builder.Configuration.GetSection("SendGridSettings"));
