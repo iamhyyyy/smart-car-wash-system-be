@@ -142,7 +142,7 @@ namespace SmartCarWash.Application.Services
     </div>
 
     <div style='background-color: #f4f4f4; padding: 20px; text-align: center; font-size: 12px; color: #999;'>
-        <p>This is an automated email from the Smart Car Wash Management System.</p>
+        <p>This is an automated email from the Eco Prime Management System.</p>
         <p><strong>Eco Prime Hub</strong><br>Ho Chi Minh City, Vietnam | Hotline: 1900-CAR-WASH</p>
     </div>
 </div>";
