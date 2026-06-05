@@ -10,5 +10,6 @@ namespace SmartCarWash.Application.Interfaces
     {
         IVehicleService VehicleService { get; }
         IFeedbackService FeedbackService { get; }
+        IPromotionService PromotionService { get; }
     }
 }
