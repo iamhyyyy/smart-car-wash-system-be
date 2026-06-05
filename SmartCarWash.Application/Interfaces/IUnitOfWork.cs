@@ -7,5 +7,6 @@
         IVehicleRepository VehicleRepository { get; }
         IFeedbackRepository FeedbackRepository { get; }
         IPromotionRepository PromotionRepository { get; }
+        IBookingRepository BookingRepository { get; }
     }
 }

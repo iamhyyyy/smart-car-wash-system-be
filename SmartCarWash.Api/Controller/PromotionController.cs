@@ -10,12 +10,10 @@ namespace SmartCarWash.WebApi.Controllers
     public class PromotionController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        private readonly IEmailService _emailService;
 
-        public PromotionController(IServiceManager serviceManager, IEmailService emailService)
+        public PromotionController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
-            _emailService = emailService;
         }
 
         [HttpGet("promotions")]

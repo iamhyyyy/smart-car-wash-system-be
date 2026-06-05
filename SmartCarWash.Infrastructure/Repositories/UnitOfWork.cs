@@ -11,6 +11,7 @@ namespace SmartCarWash.Infrastructure.Repositories
         private IVehicleRepository _vehicleRepository = null!;
         private IFeedbackRepository _feedbackRepository = null!;
         private IPromotionRepository _promotionRepository = null!;
+        private IBookingRepository _bookingRepository = null!;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -38,6 +39,7 @@ namespace SmartCarWash.Infrastructure.Repositories
         public IVehicleRepository VehicleRepository => _vehicleRepository ??= new VehicleRepository(_context);
         public IFeedbackRepository FeedbackRepository => _feedbackRepository ??= new FeedbackRepository(_context);
         public IPromotionRepository PromotionRepository => _promotionRepository ??= new PromotionRepository(_context);
+        public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
 
         public async Task<int> CompleteAsync()
         {

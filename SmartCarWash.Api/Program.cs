@@ -35,11 +35,13 @@ namespace SmartCarWash.Api
             builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
             builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
             builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+            builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 
             // Đăng ký Service
             builder.Services.AddScoped<IVehicleService, VehicleService>();
             builder.Services.AddScoped<IFeedbackService, FeedbackService>();
             builder.Services.AddScoped<IPromotionService, PromotionService>();
+            builder.Services.AddScoped<IBookingService, BookingService>();
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddScoped<IEmailService, EmailService>();

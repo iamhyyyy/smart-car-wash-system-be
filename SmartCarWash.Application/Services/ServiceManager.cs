@@ -24,5 +24,7 @@ namespace SmartCarWash.Application.Services
         public IFeedbackService FeedbackService => _serviceProvider.GetRequiredService<IFeedbackService>();
 
         public IPromotionService PromotionService => _serviceProvider.GetRequiredService<IPromotionService>();
+
+        public IBookingService BookingService => _serviceProvider.GetRequiredService<IBookingService>();
     }
 }

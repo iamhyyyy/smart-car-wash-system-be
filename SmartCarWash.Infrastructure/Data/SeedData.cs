@@ -21,6 +21,7 @@ namespace SmartCarWash.Infrastructure.Data
                     await context.Database.MigrateAsync();
                 }
 
+                // Chạy theo đúng thứ tự phụ thuộc dữ liệu
                 await SeedRolesAsync(roleManager);
                 await SeedTiersAsync(context);
                 await SeedUsersAsync(userManager, context);
@@ -42,12 +43,12 @@ namespace SmartCarWash.Infrastructure.Data
 
         private static async Task SeedRolesAsync(RoleManager<IdentityRole<Guid>> roleManager)
         {
+            // Nếu đã có bất kỳ role nào trong hệ thống -> Bỏ qua
+            if (await roleManager.Roles.AnyAsync()) return;
+
             foreach (var role in new[] { "admin", "manager", "customer" })
             {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole<Guid> { Name = role, NormalizedName = role.ToUpper() });
-                }
+                await roleManager.CreateAsync(new IdentityRole<Guid> { Name = role, NormalizedName = role.ToUpper() });
             }
         }
 
@@ -55,6 +56,9 @@ namespace SmartCarWash.Infrastructure.Data
 
         private static async Task SeedTiersAsync(AppDbContext context)
         {
+            // Nếu bảng Tiers đã có data -> Bỏ qua
+            if (await context.Tiers.AnyAsync()) return;
+
             var now = DateTime.UtcNow;
             var tierTemplates = new List<Tier>
             {
@@ -63,18 +67,15 @@ namespace SmartCarWash.Infrastructure.Data
                 new() { Name = "Gold", MinPointsRequired = 500, BookingWindowDays = 5, PriorityLevel = 3, PointMultiplier = 1.20m, PerksDescription = "Uu tien gio cao diem", IsActive = true, CreatedAt = now, UpdatedAt = now }
             };
 
-            var existingNames = await context.Tiers.Select(t => t.Name).ToListAsync();
-            var toAdd = tierTemplates.Where(t => !existingNames.Contains(t.Name)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.Tiers.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.Tiers.AddRange(tierTemplates);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedUsersAsync(UserManager<User> userManager, AppDbContext context)
         {
+            // Nếu bảng Users đã có data -> Bỏ qua không tạo user lẫn profile nữa
+            if (await userManager.Users.AnyAsync()) return;
+
             await CreateUserAsync(userManager, context, "admin", "nguyenhuy3112005@gmail.com", "Admin@123", "Admin", "User", "admin", seedProfile: false);
             await CreateUserAsync(userManager, context, "manager", "kietdtse183938@fpt.edu.vn", "Manager@123", "Manager", "User", "manager", seedProfile: false);
             await CreateUserAsync(userManager, context, "customer", "huyndse184016@fpt.edu.vn", "Customer@123", "Customer", "User", "customer", seedProfile: true);
@@ -91,8 +92,6 @@ namespace SmartCarWash.Infrastructure.Data
             string role,
             bool seedProfile = true)
         {
-            if (await userManager.FindByNameAsync(username) != null) return;
-
             var user = new User
             {
                 UserName = username,
@@ -111,23 +110,23 @@ namespace SmartCarWash.Infrastructure.Data
 
             if (seedProfile && role == "customer")
             {
-                if (!await context.CustomerProfiles.AnyAsync(cp => cp.Id == user.Id))
+                context.CustomerProfiles.Add(new CustomerProfile
                 {
-                    context.CustomerProfiles.Add(new CustomerProfile
-                    {
-                        Id = user.Id,
-                        CurrentTierId = DefaultTierId,
-                        LastTierReviewDate = DateTime.UtcNow,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
-                    });
-                    await context.SaveChangesAsync();
-                }
+                    Id = user.Id,
+                    CurrentTierId = DefaultTierId,
+                    LastTierReviewDate = DateTime.UtcNow,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow
+                });
+                await context.SaveChangesAsync();
             }
         }
 
         private static async Task SeedWashServicesAsync(AppDbContext context)
         {
+            // Nếu bảng WashServices đã có data -> Bỏ qua
+            if (await context.WashServices.AnyAsync()) return;
+
             var now = DateTime.UtcNow;
             var templates = new List<WashService>
             {
@@ -136,18 +135,15 @@ namespace SmartCarWash.Infrastructure.Data
                 new() { Name = "Combo toan dien", Description = "Goi tong hop", BasePrice = 250000, EstimatedDurationMinutes = 75, PointsPerTransaction = 60, IsActive = true, CreatedAt = now, UpdatedAt = now }
             };
 
-            var existingNames = await context.WashServices.Select(s => s.Name).ToListAsync();
-            var toAdd = templates.Where(s => !existingNames.Contains(s.Name)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.WashServices.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.WashServices.AddRange(templates);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedVehiclesAsync(AppDbContext context)
         {
+            // Nếu bảng Vehicles đã có data -> Bỏ qua
+            if (await context.Vehicles.AnyAsync()) return;
+
             var profile = await context.CustomerProfiles.OrderBy(cp => cp.CreatedAt).FirstOrDefaultAsync();
             if (profile == null) return;
 
@@ -158,18 +154,15 @@ namespace SmartCarWash.Infrastructure.Data
                 new() { CustomerId = profile.Id, LicensePlate = "51G-99999", VehicleType = VehicleType.Scooter, Brand = "Yamaha", Color = "Red", CreatedAt = now, UpdatedAt = now }
             };
 
-            var existingPlates = await context.Vehicles.Select(v => v.LicensePlate).ToListAsync();
-            var toAdd = vehicles.Where(v => !existingPlates.Contains(v.LicensePlate)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.Vehicles.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.Vehicles.AddRange(vehicles);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedPromotionsAsync(AppDbContext context, UserManager<User> userManager)
         {
+            // Nếu bảng Promotions đã có data -> Bỏ qua
+            if (await context.Promotions.AnyAsync()) return;
+
             var admin = await userManager.FindByNameAsync("admin");
             var bronzeTierId = await context.Tiers
                 .Where(t => t.Name == "Bronze")
@@ -184,18 +177,15 @@ namespace SmartCarWash.Infrastructure.Data
                 new() { PromoName = "Doi 100 diem", Description = "Doi diem lay ma giam gia", PromoType = PromoType.Addon, DiscountAmount = 20000, DiscountPercent = 0, PointsCost = 100, MinTierId = null, ValidFrom = now.AddDays(-20), ValidTo = now.AddMonths(3), MaxUsesTotal = null, MaxUsesPerCustomer = 5, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now }
             };
 
-            var existingNames = await context.Promotions.Select(p => p.PromoName).ToListAsync();
-            var toAdd = templates.Where(p => !existingNames.Contains(p.PromoName)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.Promotions.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.Promotions.AddRange(templates);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedBookingsAsync(AppDbContext context)
         {
+            // Nếu bảng Bookings đã có data -> Bỏ qua
+            if (await context.Bookings.AnyAsync()) return;
+
             var customer = await context.CustomerProfiles.OrderBy(c => c.CreatedAt).FirstOrDefaultAsync();
             var vehicles = await context.Vehicles.Where(v => customer != null && v.CustomerId == customer.Id).OrderBy(v => v.CreatedAt).ToListAsync();
             var services = await context.WashServices.OrderBy(s => s.BasePrice).Take(2).ToListAsync();
@@ -239,23 +229,15 @@ namespace SmartCarWash.Infrastructure.Data
                 });
             }
 
-            var toAdd = new List<Booking>();
-            foreach (var b in templates)
-            {
-                var exists = await context.Bookings.AnyAsync(existing =>
-                    existing.CustomerId == b.CustomerId && existing.ScheduledTime == b.ScheduledTime);
-                if (!exists) toAdd.Add(b);
-            }
-
-            if (toAdd.Count > 0)
-            {
-                context.Bookings.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.Bookings.AddRange(templates);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedPointLogsAsync(AppDbContext context)
         {
+            // Nếu bảng PointLogs đã có data -> Bỏ qua
+            if (await context.PointLogs.AnyAsync()) return;
+
             var bookings = await context.Bookings
                 .Include(b => b.Customer)
                 .Where(b => b.Status == BookingStatus.Completed)
@@ -290,22 +272,15 @@ namespace SmartCarWash.Infrastructure.Data
                 });
             }
 
-            var existingBookingIds = await context.PointLogs
-                .Where(pl => pl.BookingId != null)
-                .Select(pl => pl.BookingId!.Value)
-                .ToListAsync();
-
-            var toAdd = templates.Where(pl => pl.BookingId.HasValue && !existingBookingIds.Contains(pl.BookingId.Value)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.PointLogs.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.PointLogs.AddRange(templates);
+            await context.SaveChangesAsync();
         }
 
         private static async Task SeedFeedbacksAsync(AppDbContext context)
         {
+            // Nếu bảng Feedbacks đã có data -> Bỏ qua
+            if (await context.Feedbacks.AnyAsync()) return;
+
             var completedBookings = await context.Bookings
                 .Where(b => b.Status == BookingStatus.Completed)
                 .OrderBy(b => b.CompletedTime)
@@ -329,14 +304,8 @@ namespace SmartCarWash.Infrastructure.Data
                 UpdatedAt = (booking.CompletedTime ?? DateTime.UtcNow).AddMinutes(30)
             }).ToList();
 
-            var existingBookingIds = await context.Feedbacks.Select(f => f.BookingId).ToListAsync();
-            var toAdd = templates.Where(f => !existingBookingIds.Contains(f.BookingId)).ToList();
-
-            if (toAdd.Count > 0)
-            {
-                context.Feedbacks.AddRange(toAdd);
-                await context.SaveChangesAsync();
-            }
+            context.Feedbacks.AddRange(templates);
+            await context.SaveChangesAsync();
         }
     }
 }
