@@ -13,5 +13,8 @@ namespace SmartCarWash.Application.Interfaces
         IPromotionService PromotionService { get; }
         IBookingService BookingService { get; }
         IUserService UserService { get; }
+        ITierService TierService { get; }
+        ICustomerProfileService CustomerProfileService { get; }
+        IPointLogService PointLogService { get; }
     }
 }

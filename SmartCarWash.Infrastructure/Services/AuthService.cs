@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using SmartCarWash.Application.DTOs.Auth;
 using SmartCarWash.Application.Interfaces;
 using SmartCarWash.Domain.Entities;
+using SmartCarWash.Domain.Interfaces;
 
 namespace SmartCarWash.Infrastructure.Services;
 
@@ -17,17 +18,20 @@ public class AuthService : IAuthService
     private readonly RoleManager<IdentityRole<Guid>> _roleManager;
     private readonly IConfiguration _configuration;
     private readonly IEmailService _emailService;
+    private readonly IUnitOfWork _unitOfWork;
 
     public AuthService(
         UserManager<User> userManager,
         RoleManager<IdentityRole<Guid>> roleManager,
         IConfiguration configuration,
-        IEmailService emailService)
+        IEmailService emailService,
+        IUnitOfWork unitOfWork)
     {
         _userManager = userManager;
         _roleManager = roleManager;
         _configuration = configuration;
         _emailService = emailService;
+        _unitOfWork = unitOfWork;
     }
 
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
@@ -62,6 +66,29 @@ public class AuthService : IAuthService
 
         // Mặc định gán role customer
         await _userManager.AddToRoleAsync(user, "customer");
+
+        // Tạo CustomerProfile mặc định cho customer
+        var defaultTier = (await _unitOfWork.TierRepository.GetActiveAsync())
+                          .OrderBy(t => t.MinPointsRequired)
+                          .FirstOrDefault();
+
+        if (defaultTier != null)
+        {
+            var profile = new CustomerProfile
+            {
+                Id = user.Id,
+                CurrentTierId = defaultTier.Id,
+                AvailablePoints = 0,
+                LifetimePoints = 0,
+                TotalVisits = 0,
+                TotalSpending = 0,
+                LastTierReviewDate = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow
+            };
+            await _unitOfWork.CustomerProfileRepository.AddAsync(profile);
+            await _unitOfWork.CompleteAsync();
+        }
 
         // Sinh token xác nhận email
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);

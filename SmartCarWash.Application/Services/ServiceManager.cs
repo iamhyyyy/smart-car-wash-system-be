@@ -28,5 +28,11 @@ namespace SmartCarWash.Application.Services
         public IBookingService BookingService => _serviceProvider.GetRequiredService<IBookingService>();
 
         public IUserService UserService => _serviceProvider.GetRequiredService<IUserService>();
+
+        public ITierService TierService => _serviceProvider.GetRequiredService<ITierService>();
+
+        public ICustomerProfileService CustomerProfileService => _serviceProvider.GetRequiredService<ICustomerProfileService>();
+
+        public IPointLogService PointLogService => _serviceProvider.GetRequiredService<IPointLogService>();
     }
 }

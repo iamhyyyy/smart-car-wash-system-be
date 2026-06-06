@@ -1,4 +1,4 @@
-﻿namespace SmartCarWash.Domain.Interfaces
+namespace SmartCarWash.Domain.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
@@ -8,5 +8,8 @@
         IFeedbackRepository FeedbackRepository { get; }
         IPromotionRepository PromotionRepository { get; }
         IBookingRepository BookingRepository { get; }
+        ITierRepository TierRepository { get; }
+        ICustomerProfileRepository CustomerProfileRepository { get; }
+        IPointLogRepository PointLogRepository { get; }
     }
 }

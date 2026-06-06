@@ -1,4 +1,4 @@
-﻿using SmartCarWash.Domain.Interfaces;
+using SmartCarWash.Domain.Interfaces;
 using SmartCarWash.Infrastructure.Data;
 using System.Collections;
 
@@ -12,6 +12,9 @@ namespace SmartCarWash.Infrastructure.Repositories
         private IFeedbackRepository _feedbackRepository = null!;
         private IPromotionRepository _promotionRepository = null!;
         private IBookingRepository _bookingRepository = null!;
+        private ITierRepository _tierRepository = null!;
+        private ICustomerProfileRepository _customerProfileRepository = null!;
+        private IPointLogRepository _pointLogRepository = null!;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -40,6 +43,9 @@ namespace SmartCarWash.Infrastructure.Repositories
         public IFeedbackRepository FeedbackRepository => _feedbackRepository ??= new FeedbackRepository(_context);
         public IPromotionRepository PromotionRepository => _promotionRepository ??= new PromotionRepository(_context);
         public IBookingRepository BookingRepository => _bookingRepository ??= new BookingRepository(_context);
+        public ITierRepository TierRepository => _tierRepository ??= new TierRepository(_context);
+        public ICustomerProfileRepository CustomerProfileRepository => _customerProfileRepository ??= new CustomerProfileRepository(_context);
+        public IPointLogRepository PointLogRepository => _pointLogRepository ??= new PointLogRepository(_context);
 
         public async Task<int> CompleteAsync()
         {
