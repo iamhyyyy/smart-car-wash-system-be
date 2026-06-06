@@ -14,6 +14,7 @@ public class UserDto
     public DateTime UpdatedAt { get; set; }
     public DateTime? LastLoginAt { get; set; }
     public bool IsActive { get; set; }
+    public List<string>? Roles { get; set; }
 }
 
 public class CreateUserDto
@@ -37,4 +38,15 @@ public class UpdateUserDto
     public string? LastName { get; set; }
     public DateTime DateOfBirth { get; set; }
     public bool IsActive { get; set; }
+}
+
+public class ChangePasswordDto
+{
+    public string CurrentPassword { get; set; } = string.Empty;
+    public string NewPassword { get; set; } = string.Empty;
+}
+
+public class AssignRoleDto
+{
+    public string Role { get; set; } = string.Empty;
 }

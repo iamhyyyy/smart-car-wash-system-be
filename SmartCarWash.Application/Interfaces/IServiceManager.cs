@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,5 +12,6 @@ namespace SmartCarWash.Application.Interfaces
         IFeedbackService FeedbackService { get; }
         IPromotionService PromotionService { get; }
         IBookingService BookingService { get; }
+        IUserService UserService { get; }
     }
 }
