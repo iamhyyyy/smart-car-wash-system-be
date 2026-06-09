@@ -1,4 +1,5 @@
 ﻿using SmartCarWash.Application.DTOs;
+using SmartCarWash.Domain.Entities;
 
 namespace SmartCarWash.Application.Interfaces
 {
@@ -9,5 +10,6 @@ namespace SmartCarWash.Application.Interfaces
         Task<PromotionDto> AddPromotionAsync(CreatePromotionDto dto);
         Task<bool> Update(Guid id, UpdatePromotionDto dto);
         Task<bool> Delete(Guid id);
+        Task<Promotion> ValidateEligibilityAsync(Guid promoId, CustomerProfile customer);
     }
 }

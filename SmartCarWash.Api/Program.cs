@@ -43,6 +43,7 @@ namespace SmartCarWash.Api
             builder.Services.AddScoped<ITierRepository, TierRepository>();
             builder.Services.AddScoped<ICustomerProfileRepository, CustomerProfileRepository>();
             builder.Services.AddScoped<IPointLogRepository, PointLogRepository>();
+            builder.Services.AddScoped<IWashServiceRepository, WashServiceRepository>();
 
             // Đăng ký Service
             builder.Services.AddScoped<IVehicleService, VehicleService>();
@@ -52,6 +53,7 @@ namespace SmartCarWash.Api
             builder.Services.AddScoped<ITierService, TierService>();
             builder.Services.AddScoped<ICustomerProfileService, CustomerProfileService>();
             builder.Services.AddScoped<IPointLogService, PointLogService>();
+            builder.Services.AddScoped<IWashService, WashServices>();
 
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -191,11 +193,11 @@ namespace SmartCarWash.Api
             });
 
             //environment variable for port, default to 8080 if not set
-            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            app.Run($"http://0.0.0.0:{port}");
+            //var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            //app.Run($"http://0.0.0.0:{port}");
 
             //chạy test local thì dùng cái này cho nhanh, chạy trên server thì dùng cái trên
-            //app.Run();
+            app.Run();
         }
     }
 }

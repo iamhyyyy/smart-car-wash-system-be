@@ -10,12 +10,10 @@ namespace SmartCarWash.WebApi.Controllers
     public class BookingController : ControllerBase
     {
         private readonly IServiceManager _serviceManager;
-        private readonly IEmailService _emailService;
 
-        public BookingController(IServiceManager serviceManager, IEmailService emailService)
+        public BookingController(IServiceManager serviceManager)
         {
             _serviceManager = serviceManager;
-            _emailService = emailService;
         }
 
         [HttpGet("bookings")]
@@ -48,18 +46,32 @@ namespace SmartCarWash.WebApi.Controllers
         }
 
         [HttpPost("booking")]
-        public async Task<ActionResult<CreateBookingDto>> Create(CreateBookingDto dto)
+        public async Task<ActionResult<BookingDto>> Create(CreateBookingDto dto)
         {
-            var booking = await _serviceManager.BookingService.AddBookingAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            try
+            {
+                var booking = await _serviceManager.BookingService.AddBookingAsync(dto);
+                return CreatedAtAction(nameof(GetById), new { id = booking.Id }, booking);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpPatch("booking/{id}")]
         public async Task<ActionResult> Update(Guid id, UpdateBookingDto dto)
         {
-            var booking = await _serviceManager.BookingService.Update(id, dto);
-            if (!booking) return NotFound();
-            return NoContent();
+            try
+            {
+                var booking = await _serviceManager.BookingService.Update(id, dto);
+                if (!booking) return NotFound();
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         [HttpDelete("booking/{id}")]

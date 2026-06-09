@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using SmartCarWash.Application.Interfaces;
 using SmartCarWash.Domain.Interfaces;
@@ -34,5 +34,7 @@ namespace SmartCarWash.Application.Services
         public ICustomerProfileService CustomerProfileService => _serviceProvider.GetRequiredService<ICustomerProfileService>();
 
         public IPointLogService PointLogService => _serviceProvider.GetRequiredService<IPointLogService>();
+
+        public IWashService WashServices => _serviceProvider.GetRequiredService<IWashService>();
     }
 }

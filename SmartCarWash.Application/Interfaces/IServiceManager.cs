@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +16,6 @@ namespace SmartCarWash.Application.Interfaces
         ITierService TierService { get; }
         ICustomerProfileService CustomerProfileService { get; }
         IPointLogService PointLogService { get; }
+        IWashService WashServices { get; }
     }
 }

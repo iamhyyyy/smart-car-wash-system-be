@@ -52,7 +52,7 @@ namespace SmartCarWash.Infrastructure.Data
             }
         }
 
-        private static readonly Guid DefaultTierId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+        private static readonly Guid MemberTierId = Guid.Parse("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
 
         private static async Task SeedTiersAsync(AppDbContext context)
         {
@@ -62,9 +62,10 @@ namespace SmartCarWash.Infrastructure.Data
             var now = DateTime.UtcNow;
             var tierTemplates = new List<Tier>
             {
-                new() { Id = DefaultTierId, Name = "Bronze", MinPointsRequired = 0, BookingWindowDays = 3, PriorityLevel = 1, PointMultiplier = 1.0m, PerksDescription = "Hang mac dinh", IsActive = true, CreatedAt = now, UpdatedAt = now },
-                new() { Name = "Silver", MinPointsRequired = 200, BookingWindowDays = 4, PriorityLevel = 2, PointMultiplier = 1.10m, PerksDescription = "Giam nhe gio cho", IsActive = true, CreatedAt = now, UpdatedAt = now },
-                new() { Name = "Gold", MinPointsRequired = 500, BookingWindowDays = 5, PriorityLevel = 3, PointMultiplier = 1.20m, PerksDescription = "Uu tien gio cao diem", IsActive = true, CreatedAt = now, UpdatedAt = now }
+                new() { Id = MemberTierId, Name = "Member", MinPointsRequired = 0, BookingWindowDays = 7, PriorityLevel = 1, PointMultiplier = 1.0m, PerksDescription = "Dat lich truoc 7 ngay", IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { Name = "Silver", MinPointsRequired = 200, BookingWindowDays = 10, PriorityLevel = 2, PointMultiplier = 1.10m, PerksDescription = "Dat lich truoc 10 ngay, uu tien xep hang", IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { Name = "Gold", MinPointsRequired = 500, BookingWindowDays = 12, PriorityLevel = 3, PointMultiplier = 1.20m, PerksDescription = "Dat lich truoc 12 ngay, uu tien cao", IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { Name = "Platinum", MinPointsRequired = 1000, BookingWindowDays = 14, PriorityLevel = 4, PointMultiplier = 1.30m, PerksDescription = "Dat lich truoc 14 ngay, uu tien hang dau", IsActive = true, CreatedAt = now, UpdatedAt = now }
             };
 
             context.Tiers.AddRange(tierTemplates);
@@ -78,7 +79,7 @@ namespace SmartCarWash.Infrastructure.Data
 
             await CreateUserAsync(userManager, context, "admin", "nguyenhuy3112005@gmail.com", "Admin@123", "Admin", "User", "admin", seedProfile: false);
             await CreateUserAsync(userManager, context, "manager", "kietdtse183938@fpt.edu.vn", "Manager@123", "Manager", "User", "manager", seedProfile: false);
-            await CreateUserAsync(userManager, context, "customer", "huyndse184016@fpt.edu.vn", "Customer@123", "Customer", "User", "customer", seedProfile: true);
+            await CreateUserAsync(userManager, context, "customer", "huyndse184016@fpt.edu.vn", "Customer@123", "Customer", "User", "customer", phoneNumber: "0901234567", seedProfile: true);
         }
 
         private static async Task CreateUserAsync(
@@ -90,6 +91,7 @@ namespace SmartCarWash.Infrastructure.Data
             string firstName,
             string lastName,
             string role,
+            string? phoneNumber = null,
             bool seedProfile = true)
         {
             var user = new User
@@ -99,6 +101,7 @@ namespace SmartCarWash.Infrastructure.Data
                 EmailConfirmed = true,
                 FirstName = firstName,
                 LastName = lastName,
+                PhoneNumber = phoneNumber,
                 DateOfBirth = DateTime.UtcNow.AddYears(-25),
                 IsActive = true
             };
@@ -113,7 +116,7 @@ namespace SmartCarWash.Infrastructure.Data
                 context.CustomerProfiles.Add(new CustomerProfile
                 {
                     Id = user.Id,
-                    CurrentTierId = DefaultTierId,
+                    CurrentTierId = MemberTierId,
                     LastTierReviewDate = DateTime.UtcNow,
                     CreatedAt = DateTime.UtcNow,
                     UpdatedAt = DateTime.UtcNow
@@ -164,17 +167,19 @@ namespace SmartCarWash.Infrastructure.Data
             if (await context.Promotions.AnyAsync()) return;
 
             var admin = await userManager.FindByNameAsync("admin");
-            var bronzeTierId = await context.Tiers
-                .Where(t => t.Name == "Bronze")
+            var silverTierId = await context.Tiers
+                .Where(t => t.Name == "Silver")
                 .Select(t => t.Id)
                 .FirstOrDefaultAsync();
-            if (bronzeTierId == Guid.Empty) return;
+            if (silverTierId == Guid.Empty) return;
 
             var now = DateTime.UtcNow;
             var templates = new List<Promotion>
             {
-                new() { PromoName = "Giam 10K dau tuan", Description = "Ap dung lich dau tuan", PromoType = PromoType.Discount, DiscountAmount = 10000, DiscountPercent = 0, PointsCost = 0, MinTierId = bronzeTierId, ValidFrom = now.AddDays(-15), ValidTo = now.AddMonths(2), MaxUsesTotal = 300, MaxUsesPerCustomer = 3, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now },
-                new() { PromoName = "Doi 100 diem", Description = "Doi diem lay ma giam gia", PromoType = PromoType.Addon, DiscountAmount = 20000, DiscountPercent = 0, PointsCost = 100, MinTierId = null, ValidFrom = now.AddDays(-20), ValidTo = now.AddMonths(3), MaxUsesTotal = null, MaxUsesPerCustomer = 5, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now }
+                new() { PromoName = "Giam 10K dau tuan", Description = "Ap dung lich dau tuan cho tat ca thanh vien", PromoType = PromoType.Discount, DiscountAmount = 10000, DiscountPercent = 0, PointsCost = 0, MinTierId = MemberTierId, ValidFrom = now.AddDays(-15), ValidTo = now.AddMonths(2), MaxUsesTotal = 300, MaxUsesPerCustomer = 3, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { PromoName = "Uu dai Silver+", Description = "Khuyen mai danh rieng cho hang Silver tro len", PromoType = PromoType.Discount, DiscountAmount = 0, DiscountPercent = 15, PointsCost = 0, MinTierId = silverTierId, ValidFrom = now.AddDays(-10), ValidTo = now.AddMonths(2), MaxUsesTotal = 100, MaxUsesPerCustomer = 2, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { PromoName = "Doi 100 diem", Description = "Doi diem lay addon giam gia", PromoType = PromoType.Addon, DiscountAmount = 20000, DiscountPercent = 0, PointsCost = 100, MinTierId = null, ValidFrom = now.AddDays(-20), ValidTo = now.AddMonths(3), MaxUsesTotal = null, MaxUsesPerCustomer = 5, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now },
+                new() { PromoName = "Rua mien phi 200 diem", Description = "Doi diem lay luot rua mien phi", PromoType = PromoType.FreeWash, DiscountAmount = 0, DiscountPercent = 100, PointsCost = 200, MinTierId = null, ValidFrom = now.AddDays(-5), ValidTo = now.AddMonths(6), MaxUsesTotal = 50, MaxUsesPerCustomer = 1, CurrentUses = 0, CreatedBy = admin?.Id, IsActive = true, CreatedAt = now, UpdatedAt = now }
             };
 
             context.Promotions.AddRange(templates);
@@ -266,7 +271,7 @@ namespace SmartCarWash.Infrastructure.Data
                     TransactionType = PointTransactionType.Earn,
                     BalanceAfter = newBalance,
                     Note = "Cong diem sau khi hoan tat booking",
-                    ExpiresAt = now.AddMonths(6),
+                    ExpiresAt = now.AddYears(1),
                     CreatedAt = booking.CompletedTime ?? now,
                     UpdatedAt = booking.CompletedTime ?? now
                 });
