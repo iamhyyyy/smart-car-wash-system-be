@@ -40,20 +40,16 @@ public class PointLogController : ControllerBase
         return Ok(logs);
     }
 
-    /// <summary>
-    /// Chạy tiến trình xử lý các điểm đã hết hạn (Expiry)
-    /// </summary>
+
     [HttpPost("process-expiry")]
-    [Authorize(Roles = "admin,manager")]
+    [Authorize(Roles = "admin,manager")]    
     public async Task<IActionResult> ProcessExpiry()
     {
         var count = await _serviceManager.PointLogService.ProcessExpiredPointsAsync();
         return Ok(new { message = $"Đã xử lý {count} mục điểm hết hạn." });
     }
 
-    /// <summary>
-    /// Xem danh sách điểm sắp hết hạn trong N ngày tới
-    /// </summary>
+
     [HttpGet("expiring")]
     [Authorize(Roles = "admin,manager")]
     public async Task<ActionResult<IEnumerable<PointLogDto>>> GetExpiring([FromQuery] int withinDays = 30)
