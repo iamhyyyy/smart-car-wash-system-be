@@ -93,7 +93,7 @@ public class AuthService : IAuthService
         // Sinh token xác nhận email
         var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var encodedToken = HttpUtility.UrlEncode(token);
-        var clientUrl = _configuration["ClientUrl"] ?? "http://localhost:3000";
+        var clientUrl = _configuration["ClientUrl"];
         var confirmLink = $"{clientUrl}/confirm-email?userId={user.Id}&token={encodedToken}";
 
         // Gửi email xác nhận
