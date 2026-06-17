@@ -1,9 +1,12 @@
+using SmartCarWash.Domain.Entities;
+
 namespace SmartCarWash.Application.DTOs;
 
 public class CustomerProfileDto
 {
     public Guid Id { get; set; }
     public Guid CurrentTierId { get; set; }
+    public string? CurrentTierName { get; set; }
     public int AvailablePoints { get; set; }
     public int LifetimePoints { get; set; }
     public int TotalVisits { get; set; }

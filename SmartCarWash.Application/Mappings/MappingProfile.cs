@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+using AutoMapper;
 using SmartCarWash.Application.DTOs;
 using SmartCarWash.Domain.Entities;
 
@@ -16,7 +16,9 @@ namespace SmartCarWash.Application.Mappings
             CreateMap<CreateTierDto, Tier>();
             CreateMap<UpdateTierDto, Tier>();
 
-            CreateMap<CustomerProfile, CustomerProfileDto>().ReverseMap();
+            CreateMap<CustomerProfile, CustomerProfileDto>()
+                .ForMember(dest => dest.CurrentTierName, opt => opt.MapFrom(src => src.CurrentTier != null ? src.CurrentTier.Name : null))
+                .ReverseMap();
             CreateMap<CreateCustomerProfileDto, CustomerProfile>();
             CreateMap<UpdateCustomerProfileDto, CustomerProfile>();
 
