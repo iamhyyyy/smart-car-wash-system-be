@@ -85,22 +85,13 @@ namespace SmartCarWash.Application.Services
             return result.Succeeded;
         }
 
-        public async Task<bool> DeleteUserAsync(Guid id)
-        {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null) return false;
-
-            var result = await _userManager.DeleteAsync(user);
-            return result.Succeeded;
-        }
-
         public async Task<bool> LockUserAsync(Guid id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return false;
 
             user.IsActive = false;
-            user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedAt = DateTime.UtcNow.AddHours(7);
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
@@ -112,7 +103,7 @@ namespace SmartCarWash.Application.Services
             if (user == null) return false;
 
             user.IsActive = true;
-            user.UpdatedAt = DateTime.UtcNow;
+            user.UpdatedAt = DateTime.UtcNow.AddHours(7);
 
             var result = await _userManager.UpdateAsync(user);
             return result.Succeeded;
@@ -141,15 +132,6 @@ namespace SmartCarWash.Application.Services
             if (user == null) return false;
 
             var result = await _userManager.AddToRoleAsync(user, role);
-            return result.Succeeded;
-        }
-
-        public async Task<bool> RemoveRoleAsync(Guid id, string role)
-        {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user == null) return false;
-
-            var result = await _userManager.RemoveFromRoleAsync(user, role);
             return result.Succeeded;
         }
     }

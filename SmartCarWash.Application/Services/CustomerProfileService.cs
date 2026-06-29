@@ -62,16 +62,6 @@ namespace SmartCarWash.Application.Services
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Guid id)
-        {
-            var profile = await _unitOfWork.CustomerProfileRepository.GetByIdAsync(id);
-            if (profile == null) return false;
-
-            _unitOfWork.CustomerProfileRepository.Delete(profile);
-            await _unitOfWork.CompleteAsync();
-            return true;
-        }
-
         public async Task<bool> RedeemPointsAsync(Guid customerId, int pointsToRedeem, string note)
         {
             if (pointsToRedeem <= 0) return false;

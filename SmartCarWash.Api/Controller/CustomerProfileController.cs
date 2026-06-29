@@ -56,7 +56,7 @@ public class CustomerProfileController : ControllerBase
         var result = await _serviceManager.CustomerProfileService.UpdateAsync(id, dto);
         if (!result) return NotFound(new { message = "Không tìm thấy hồ sơ." });
 
-        return NoContent();
+        return Ok(dto);
     }
 
 
