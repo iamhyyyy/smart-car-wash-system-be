@@ -435,10 +435,6 @@ namespace SmartCarWash.Application.Services
                 </tr>
             </table>
         </div>
-
-        <div style='text-align: center; margin-top: 32px;'>
-            <a href='https://autowash-pro-frontend.vercel.app/bookings/customer/{booking.CustomerId}' style='background-color: {_headerColor}; color: white; padding: 12px 28px; text-decoration: none; border-radius: 6px; font-size: 14px; font-weight: bold; display: inline-block; box-shadow: 0 2px 6px rgba(0,0,0,0.05);'>Manage Your Appointments</a>
-        </div>
     </div>
 
     <div style='background-color: #f8fafc; padding: 24px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #edf2f7;'>
