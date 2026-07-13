@@ -411,7 +411,7 @@ namespace SmartCarWash.Application.Services
                 </tr>
                 <tr>
                     <td style='padding: 8px 0; color: #7f8c8d;'>Scheduled Time:</td>
-                    <td style='padding: 8px 0; text-align: right; font-weight: bold; color: #34495E;'>{booking.ScheduledTime:MM/dd/yyyy HH:mm}</td>
+                    <td style='padding: 8px 0; text-align: right; font-weight: bold; color: #34495E;'>{booking.ScheduledTime.AddHours(7):MM/dd/yyyy HH:mm}</td>
                 </tr>
                 <tr>
                     <td style='padding: 8px 0; color: #7f8c8d;'>Process Status:</td>
